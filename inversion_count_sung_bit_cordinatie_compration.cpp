@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+int arr[100000];
+int bit[10000] = {0}; //
+// it is vaalid for all value of n
+void update(int i, int inc, int n)
+{
+    while (i <= n)
+    {
+        bit[i] += inc;
+        i += (i & (-i));
+    }
+}
+int query(int i)
+{
+    int ans = 0;
+    while (i > 0)
+    {
+        ans += bit[i];
+
+        i -= (i & (-i));
+    }
+    return ans;
+}
+int main()
+{
+    int n;
+    cin >> n;
+    for (int i = 1; i <= n; i++)
+    {
+        cin >> arr[i];
+    }
+    set<int> st;
+    for (auto p : arr)
+    {
+
+        st.insert(p);
+    }
+    int count = 1;
+    map<int, int> mp;
+    int m = 0;
+
+    for (auto p : st)
+    {
+        if (m != 0)
+        {
+            mp[p] = count;
+            count += 1;
+        }
+        m++;
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        arr[i] = mp[arr[i]];
+    }
+    int ans = 0;
+    for (int i = n; i > 0; i--)
+    {
+        ans += query(arr[i] - 1);
+        update(arr[i], 1, n);
+    }
+    cout << ans << endl;
+    return 0;
+}
